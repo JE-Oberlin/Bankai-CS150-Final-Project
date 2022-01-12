@@ -5,14 +5,17 @@ pygame.init()
 pygame.font.init()
 
 # EVERYTHING HAPPENS IN GameManager CLASS
+
+
 def main():
-  #pygame.init()
+    # pygame.init()
 
-  gameManager = GameManager()
+    gameManager = GameManager()
 
-  #gameManager.changeShownCharacter(gameManager.aizen)
+    # gameManager.changeShownCharacter(gameManager.aizen)
 
-  gameManager.loop()
+    gameManager.loop()
+
 
 if __name__ == "__main__":
-  main()
+    main()
