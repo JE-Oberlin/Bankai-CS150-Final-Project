@@ -11,8 +11,6 @@ from aizen import Aizen
 from attack import Attack
 import menuImg
 
-
-
 class GameManager:
   screen = pygame.display.set_mode(constants.SIZE)
   def __init__(self):
@@ -140,7 +138,7 @@ class GameManager:
   def damageIchigo(self):
     c = random.randint(0, 100)
 
-    if c > atk.hitChance:
+    if c < self.aizen.attacks[0].useChance:
       pass
 
 
