@@ -12,6 +12,7 @@ from attack import Attack
 import menuImg
 
 
+
 class GameManager:
   screen = pygame.display.set_mode(constants.SIZE)
   def __init__(self):
