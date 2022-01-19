@@ -4,7 +4,7 @@ class ScriptParser:
         self.masterScript = []
         self.position = -1
         for line in f:
-            print(line)
+            # line)
             if line[0] == "#" or line[0] == "\n":
                 pass
             else:

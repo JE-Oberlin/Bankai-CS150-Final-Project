@@ -24,14 +24,16 @@ class GameManager:
         self.aizen = Aizen(self.screen)
         self.empty = EmptyCharacter.Empty(self.screen)
         self.mainMenuImg = menuImg.MenuImg(self.screen)
-        self.mainMenuButtons = [Button(self.screen, 450, 100,
-                                self.start, "Start"),
-                                Button(self.screen, 450, 150, self.quit, "Quit")]
-        self.fightButtons = [Button(self.screen, 300, 50,
-                                    self.damageAizen, "Attack", arg=self.ichigo.basicAttack),
-                             Button(self.screen, 300, 100,
-                                    self.skills, "Skills"),
-                             Button(self.screen, 300, 150, )]
+        self.mainMenuButtons = [
+            Button(self.screen, 450, 100, self.start, "Start"),
+            Button(self.screen, 450, 150, self.quit, "Quit")
+        ]
+        self.fightButtons = [
+            Button(self.screen, 300, 50, self.damageAizen,
+                   "Attack", arg=self.ichigo.basicAttack),
+            Button(self.screen, 300, 100, self.skills, "Skills"),
+            Button(self.screen, 300, 150, )
+        ]
         self.skillButtons = self.genSkillButtons()
         self.itemButtons = []
         self.updateText = "Click Start!"
@@ -81,6 +83,7 @@ class GameManager:
                         self.onScreenButtons.append(b)
                     self.battleMode = True
                     self.dialogueMode = False
+                    self.updateText = ""
                     self.script.next()
                 elif self.script.currentLine()[0] == "<END>":
                     # print("Hello there")
@@ -121,7 +124,7 @@ class GameManager:
         return end
 
     def skills(self):
-        print(self.skillButtons)
+        # print(self.skillButtons)
         for b in self.skillButtons:
             self.onScreenButtons.append(b)
 

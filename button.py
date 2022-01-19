@@ -11,7 +11,7 @@ class Button():
         self.x = x
         self.y = y
         self.arg = arg
-        print(self.arg)
+        # print(self.arg)
         self.width = width
         self.height = height
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
@@ -32,7 +32,6 @@ class Button():
         self.screen.blit(self.renderedText, (self.x +
                          self.xOffset, self.y + self.yOffset))
 
-    # This isn't confusing at all what do you mean bro
     def action(self):
         # print(self.arg)
         if self.arg is not None:
