@@ -7,7 +7,7 @@ class Aizen(Character):
     # need use chances for the "AI", more like Artificial Dumbness lol.
     class Shikai(Attack):
         def __init__(self):
-            super().__init__("Shikai - \"Kyōka Suigetsu\"", [250, 390], 60, 30)
+            super().__init__('Shikai - "Kyōka Suigetsu"', [250, 390], 60, 30)
             self.useChance = 35
 
     class BasicAttack(Attack):
@@ -20,4 +20,4 @@ class Aizen(Character):
         self.image = pygame.transform.scale(self.image, (275, 275))
         self.health = 1000
         self.MP = 200
-        self.moves = [Aizen.BasicAttack(), Aizen.Shikai()]
+        self.attacks = [Aizen.BasicAttack(), Aizen.Shikai()]

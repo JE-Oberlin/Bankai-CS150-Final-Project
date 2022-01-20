@@ -1,7 +1,15 @@
 from character import Character
 
 
-class HealthItem:
+class Item:
+    def __init__(self):
+        self.name = ""
+
+    def use(self):
+        pass
+
+
+class HealthItem(Item):
     def __init__(self):
         self.name = "Bandage"
 

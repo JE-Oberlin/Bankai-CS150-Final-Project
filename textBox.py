@@ -2,18 +2,28 @@ import pygame
 
 
 class TextBox:
-    def __init__(self, screen):
+    def __init__(
+        self,
+        screen,
+        textColor=(10, 10, 10),
+        bkgndPos=(20, 350),
+        bkgndSize=(660, 65),
+        bkgndColor=(165, 211, 230),
+    ):
         self.screen = screen
         self.character = ""
         self.text = ""
         self.font = pygame.font.SysFont("arial", 18)
-        self.color = (10, 10, 10)
+        self.color = textColor
         self.dialogueText = self.font.render(self.text, True, self.color)
         self.characterText = self.font.render(self.character, True, self.color)
-        self.bkgndRect = pygame.Rect(20, 350, 660, 65)
+        self.bkgndRect = pygame.Rect(
+            bkgndPos[0], bkgndPos[1], bkgndSize[0], bkgndSize[1]
+        )
+        self.bkgndColor = bkgndColor
 
     def blit(self):
-        pygame.draw.rect(self.screen, (165, 211, 230), self.bkgndRect)
+        pygame.draw.rect(self.screen, self.bkgndColor, self.bkgndRect)
         self.screen.blit(self.dialogueText, (30, 375))
         self.screen.blit(self.characterText, (30, 355))
 
@@ -31,5 +41,4 @@ class TextBox:
             else:
                 self.character = ""
 
-            self.characterText = self.font.render(
-                self.character, True, self.color)
+            self.characterText = self.font.render(self.character, True, self.color)
