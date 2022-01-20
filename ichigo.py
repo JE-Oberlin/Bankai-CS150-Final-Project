@@ -13,3 +13,4 @@ class Ichigo(Character):
         self.basicAttack = Attack("Attack", [45, 55], 95, 5)
         self.attacks = [Attack("Getsuga Tenshō", [200, 315], 85, 15)]
         self.inventory = {item.HealthItem(): 5}
+        self.name = "Ichigo"

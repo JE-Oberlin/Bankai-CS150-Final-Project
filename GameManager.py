@@ -4,11 +4,13 @@ import sys
 import constants
 import textBox
 import EmptyCharacter
+import util
 import ScriptParser as sp
 from button import Button
 from ichigo import Ichigo
 from aizen import Aizen
 from attack import Attack
+import item
 import menuImg
 
 
@@ -38,6 +40,10 @@ class GameManager:
             Button(self.screen, 450, 100, self.start, "Start"),
             Button(self.screen, 450, 150, self.quit, "Quit"),
         ]
+        self.deathButtons = [
+            Button(self.screen, 450, 100, self.retryFight, "Retry?"),
+            Button(self.screen, 450, 150, self.quit, "Quit"),
+        ]
         self.fightButtons = [
             Button(
                 self.screen,
@@ -50,12 +56,19 @@ class GameManager:
             Button(self.screen, 300, 100, self.skills, "Skills"),
             Button(self.screen, 300, 150, self.items, "Items"),
         ]
+        self.textBox = textBox.TextBox(self.screen)
+        self.healthBox = textBox.TextBox(
+            self.screen,
+            bkgndPos=(500, 200),
+            bkgndSize=(100, 60),
+            textOffsets=[(510, 225), (510, 205)],
+        )
+        self.healthText = str(self.ichigo.health) + "\n" + str(self.ichigo.MP)
         self.skillButtons = self.genSkillButtons()
         self.itemButtons = self.genItemButtons()
         self.updateText = "Click Start!"
         self.onScreenButtons = self.mainMenuButtons
         self.shownCharacter = self.mainMenuImg
-        self.textBox = textBox.TextBox(self.screen)
         self.dialogueMode = False
         self.battleMode = False
         self.playerTurn = True
@@ -74,16 +87,26 @@ class GameManager:
                     for b in self.onScreenButtons:
                         if b.rect.collidepoint(event.pos):
                             b.action()
+                            if b.name == item.HealthItem.name:
+                                self.itemButtons = self.genItemButtons()
+                                del self.onScreenButtons[1:]
+                                for a in self.itemButtons:
+                                    self.onScreenButtons.append(a)
                     if self.dialogueMode:
                         # print(self.script.currentLine())
                         self.script.next()
 
             if self.battleMode:
-                if self.ichigo.health <= 0 or self.aizen.health <= 0:
-                    # print("Hello")
+                if self.ichigo.health <= 0:
+                    del self.onScreenButtons
+                    self.onScreenButtons = self.deathButtons
+                    self.ichigoAttacked = False
+
+                if self.aizen.health <= 0:
+                    del self.onScreenButtons[1:]
                     self.battleMode = False
                     self.dialogueMode = True
-                    del self.onScreenButtons[1:]
+                    self.ichigoAttacked = False
 
                 if self.ichigoAttacked:
                     del self.onScreenButtons[1:]
@@ -94,7 +117,7 @@ class GameManager:
                         self.damageIchigo()
                         self.timeToMurder = False
 
-                    if self.timer > 7000:
+                    if self.timer > 5000:
                         for b in self.fightButtons:
                             self.onScreenButtons.append(b)
 
@@ -139,7 +162,12 @@ class GameManager:
             else:
                 # print('HELLO')
                 self.textBox.updateText(self.updateText)
+                self.healthBox.updateText(
+                    ["Health: " + str(self.ichigo.health), "MP: " + str(self.ichigo.MP)]
+                )
             self.textBox.blit()
+            if self.battleMode:
+                self.healthBox.blit()
             pygame.display.flip()
 
     def genItemButtons(self):
@@ -154,7 +182,8 @@ class GameManager:
                     thing.use,
                     thing.name + " - " + str(n),
                     width=len(thing.name) * 18,
-                    arg=self.ichigo,
+                    arg=[self.ichigo, self],
+                    name=thing.name,
                 )
             )
             y += 50
@@ -208,8 +237,10 @@ class GameManager:
     def damageAizen(self, atk: Attack):
         c = random.randint(0, 100)
 
+        self.ichigo.MP -= atk.cost
+
         if c > atk.hitChance:
-            self.updateText = atk.name + ", but it missed!"
+            self.updateText = "Tried to use " + atk.name + ", but it missed!"
         else:
             d = random.randint(*atk.dmgRng)
             self.aizen.health -= d
@@ -228,7 +259,9 @@ class GameManager:
         basic = self.aizen.attacks[0]
 
         if c < basic.useChance:
+            # Use Basic
             c = random.randint(0, 100)
+            self.aizen.MP -= basic.cost
             if c > basic.hitChance:
                 self.updateText = (
                     "Aizen tried to use " + basic.name + ", but it missed!"
@@ -244,7 +277,7 @@ class GameManager:
         else:
             # Use Shikai
             c = random.randint(0, 100)
-
+            self.aizen.MP -= sh.cost
             if c > sh.hitChance:
                 self.updateText = "Aizen tried to use " + sh.name + ", but it missed!"
             else:
@@ -270,9 +303,21 @@ class GameManager:
     def start(self):
         self.dialogueMode = True
         self.onScreenButtons = [self.quitButton]
+        self.reset()
 
     def quit(self):
         sys.exit(23)
 
-    def loop_ButItWorks(self):
-        print("Wow, I fixed it!")
+    def reset(self):
+        self.ichigo.health = 500
+        self.ichigo.MP = 150
+        # This is actually the most disgusting thing I've ever done
+        self.ichigo.inventory[util.cursedKeyGetter(self.ichigo.inventory, 0)] = 5
+
+        self.aizen.health = 1000
+        self.aizen.MP = 200
+
+    def retryFight(self):
+        self.reset()
+
+        self.onScreenButtons = [self.quitButton] + self.fightButtons

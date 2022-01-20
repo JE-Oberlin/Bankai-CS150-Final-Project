@@ -19,6 +19,7 @@ class Button:
         xOffset=10,
         yOffset=12,
         arg=None,
+        name="",
     ):
         pygame.init()
         self.screen = screen
@@ -37,6 +38,7 @@ class Button:
         self.xOffset = xOffset
         self.yOffset = yOffset
         self._action = action
+        self.name = name
 
     def changeTextColor(self, col):
         self.text = self.font.render(self.text, True, col)

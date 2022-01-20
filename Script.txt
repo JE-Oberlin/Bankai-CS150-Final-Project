@@ -6,5 +6,5 @@ i|It is I Ichigo Kurosaki
 a|Itsa me Aizen
 n|You kill shoot
 <BATTLE>
-i|This is our night guard, Isaac
+n|You won, very nice!
 <END>
