@@ -4,3 +4,4 @@ mx.init()
 
 fight = mx.Sound("fight.wav")
 menuMusic = mx.Sound("menumusic.wav")
+hitSound = mx.Sound("hitsound.wav")

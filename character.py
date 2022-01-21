@@ -36,16 +36,16 @@ class Character:
         self.bumped = True
 
     # override in child classes
-    def update(self):
-        if self.bumped and self.tslb < 500:
-            self.tslb += 1
+    def update(self, dt):
+        if self.bumped and self.tslb < 700:
+            self.tslb += dt
         elif self.bumped:
             self.tslb = 0
             self.pos = 0, -10
             self.bumped = False
 
-    def move(self):
-        self.update()
+    def move(self, dt):
+        self.update(dt)
         self.rect = self.rect.move(self.pos)
         self.pos = 0, 0
 

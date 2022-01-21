@@ -24,3 +24,7 @@ The text box at the bottom of the pygame window will display dialogue of the cha
 As replit does not support playing sounds in browser, the music and stuff I added will not work.
 The work around unfortunately is to download it all and run it on your actual machine so sry but it does make the game about 400 times better imo.
 So far I have only tried it on windows but it should work on macs because whoever wrote pygame is literally god himself.
+
+On different platforms, the execution time is different so the scuffed timers I made are different times
+on different platforms. It all still works, but if you computer is slowish or something it will take a 
+while for some things to happen

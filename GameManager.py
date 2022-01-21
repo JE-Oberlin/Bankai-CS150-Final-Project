@@ -13,8 +13,10 @@ from button import Button
 from ichigo import Ichigo
 from aizen import Aizen
 from attack import Attack
+from sys import platform
 import item
 import menuImg
+
 
 
 class GameManager:
@@ -23,6 +25,7 @@ class GameManager:
     def __init__(self):
         # pygame.init()
         # self.screen = pygame.display.set_mode(constants.SIZE)
+        self.gameTime = pygame.time.Clock()
         self.quitButton = Button(
             self.screen,
             680,
@@ -79,6 +82,15 @@ class GameManager:
         self.ichigoAttacked = False
         self.timeToMurder = False
         self.timer = 0
+        if platform == "darwin":
+            self.tVal1 = 1000
+            self.tVal2 = 2000
+        elif platform == "linux":
+            self.tVal1 = 300
+            self.tVal2 = 600
+        else: # Windows
+            self.tVal1 = 3000
+            self.tVal2 = 5000
         self.script = sp.ScriptParser("Script.txt")
 
     def loop(self):
@@ -124,9 +136,9 @@ class GameManager:
                 if self.ichigoAttacked:
                     del self.onScreenButtons[1:]
 
-                    self.timer += 1
+                    self.timer += self.gameTime.get_time()
 
-                    if self.timeToMurder and self.timer > 3000:
+                    if self.timeToMurder and self.timer > 2500:
                         self.damageIchigo()
                         self.timeToMurder = False
 
@@ -170,7 +182,7 @@ class GameManager:
                     self.script.position = -1
 
             # print(self.shownCharacter)
-            self.shownCharacter.move()
+            self.shownCharacter.move(self.gameTime.get_time())
 
             self.screen.fill(constants.B_COLOR)
             self.shownCharacter.blit()
@@ -190,6 +202,8 @@ class GameManager:
             if self.battleMode:
                 self.healthBox.blit()
                 self.aizenBox.blit()
+            self.gameTime.tick()
+            # print(self.gameTime.get_fps())
             pygame.display.flip()
 
     def genItemButtons(self):
@@ -268,6 +282,7 @@ class GameManager:
             self.aizen.health -= d
 
             self.aizen.bump()
+            pygame.mixer.Sound.play(sounds.hitSound)
 
             self.updateText = "Aizen took " + str(d) + " damage!"
 
@@ -310,8 +325,6 @@ class GameManager:
                 self.updateText = (
                     "Aizen used " + sh.name + " and you took " + str(d) + " damage!!"
                 )
-
-        # self.
 
     def changeShownCharacter(self, char):
         self.shownCharacter = char
