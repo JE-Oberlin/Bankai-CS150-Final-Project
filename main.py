@@ -7,6 +7,8 @@ pygame.font.init()
 
 # EVERYTHING HAPPENS IN GameManager CLASS
 
+# Hello there
+
 
 def main():
     gameManager = GameManager()
