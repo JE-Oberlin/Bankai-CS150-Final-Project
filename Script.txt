@@ -1,10 +1,12 @@
 # chr|sentence
 # i = Ichigo
 # a = Aizen
+# n = narrator
 
 i|It is I Ichigo Kurosaki
 a|Itsa me Aizen
 n|You kill shoot
 <BATTLE>
+show|i
 n|You won, very nice!
 <END>

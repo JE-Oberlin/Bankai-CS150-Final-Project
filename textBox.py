@@ -9,7 +9,6 @@ class TextBox:
         bkgndPos=(20, 350),
         bkgndSize=(660, 65),
         bkgndColor=(165, 211, 230),
-        textOffsets=[(30, 375), (30, 355)],
     ):
         self.screen = screen
         self.character = ""
@@ -22,12 +21,15 @@ class TextBox:
             bkgndPos[0], bkgndPos[1], bkgndSize[0], bkgndSize[1]
         )
         self.bkgndColor = bkgndColor
-        self.textOffsets = textOffsets
 
     def blit(self):
         pygame.draw.rect(self.screen, self.bkgndColor, self.bkgndRect)
-        self.screen.blit(self.dialogueText, self.textOffsets[0])
-        self.screen.blit(self.characterText, self.textOffsets[1])
+        self.screen.blit(
+            self.dialogueText, (self.bkgndRect.left + 10, self.bkgndRect.top + 25)
+        )
+        self.screen.blit(
+            self.characterText, (self.bkgndRect.left + 10, self.bkgndRect.top + 5)
+        )
 
     def updateText(self, text):
         # print(text)

@@ -1,5 +1,6 @@
 from GameManager import GameManager
 import pygame
+from sys import platform
 
 pygame.init()
 pygame.font.init()
@@ -8,11 +9,7 @@ pygame.font.init()
 
 
 def main():
-    # pygame.init()
-
     gameManager = GameManager()
-
-    # gameManager.changeShownCharacter(gameManager.aizen)
 
     gameManager.loop()
 

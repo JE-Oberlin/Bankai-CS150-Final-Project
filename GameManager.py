@@ -6,6 +6,9 @@ import textBox
 import EmptyCharacter
 import util
 import ScriptParser as sp
+import sounds
+
+# I do this because I am lazy, don't judge me.
 from button import Button
 from ichigo import Ichigo
 from aizen import Aizen
@@ -40,6 +43,8 @@ class GameManager:
             Button(self.screen, 450, 100, self.start, "Start"),
             Button(self.screen, 450, 150, self.quit, "Quit"),
         ]
+        self.inMainMenu = True
+        self.playingMenuMusic = False
         self.deathButtons = [
             Button(self.screen, 450, 100, self.retryFight, "Retry?"),
             Button(self.screen, 450, 150, self.quit, "Quit"),
@@ -58,12 +63,11 @@ class GameManager:
         ]
         self.textBox = textBox.TextBox(self.screen)
         self.healthBox = textBox.TextBox(
-            self.screen,
-            bkgndPos=(500, 200),
-            bkgndSize=(100, 60),
-            textOffsets=[(510, 225), (510, 205)],
+            self.screen, bkgndPos=(500, 250), bkgndSize=(120, 60)
         )
-        self.healthText = str(self.ichigo.health) + "\n" + str(self.ichigo.MP)
+        self.aizenBox = textBox.TextBox(
+            self.screen, bkgndPos=(60, 280), bkgndSize=(165, 60)
+        )
         self.skillButtons = self.genSkillButtons()
         self.itemButtons = self.genItemButtons()
         self.updateText = "Click Start!"
@@ -96,14 +100,23 @@ class GameManager:
                         # print(self.script.currentLine())
                         self.script.next()
 
+            if self.inMainMenu and not self.playingMenuMusic:
+                pygame.mixer.Sound.play(sounds.menuMusic)
+                self.playingMenuMusic = True
+            elif not self.inMainMenu and self.playingMenuMusic:
+                pygame.mixer.Sound.stop(sounds.menuMusic)
+                self.playingMenuMusic = False
+
             if self.battleMode:
                 if self.ichigo.health <= 0:
                     del self.onScreenButtons
+                    pygame.mixer.Sound.stop(sounds.fight)
                     self.onScreenButtons = self.deathButtons
                     self.ichigoAttacked = False
 
                 if self.aizen.health <= 0:
                     del self.onScreenButtons[1:]
+                    pygame.mixer.Sound.stop(sounds.fight)
                     self.battleMode = False
                     self.dialogueMode = True
                     self.ichigoAttacked = False
@@ -128,17 +141,23 @@ class GameManager:
                         self.updateText = "Please select what to do"
             elif self.dialogueMode:
                 if self.script.currentLine()[0] == "i":
-                    # print("Chingus")
                     self.shownCharacter = self.ichigo
                 elif self.script.currentLine()[0] == "a":
                     self.shownCharacter = self.aizen
-                # set up fight buttons
+                elif self.script.currentLine()[0] == "show":
+                    if self.script.currentLine()[1] == "i":
+                        self.shownCharacter = self.ichigo
+                    elif self.script.currentLine()[1] == "a":
+                        self.shownCharacter = self.aizen
+
+                    self.script.next()
                 elif self.script.currentLine()[0] == "<BATTLE>":
                     for b in self.fightButtons:
                         self.onScreenButtons.append(b)
                     self.battleMode = True
                     self.dialogueMode = False
-                    self.updateText = ""
+                    self.updateText = "Please select what to do"
+                    pygame.mixer.Sound.play(sounds.fight)
                     self.script.next()
                 elif self.script.currentLine()[0] == "<END>":
                     # print("Hello there")
@@ -146,6 +165,7 @@ class GameManager:
                     self.battleMode = False
                     self.onScreenButtons = self.mainMenuButtons
                     self.shownCharacter = self.mainMenuImg
+                    self.inMainMenu = True
                     self.updateText = "Click Start!"
                     self.script.position = -1
 
@@ -165,9 +185,11 @@ class GameManager:
                 self.healthBox.updateText(
                     ["Health: " + str(self.ichigo.health), "MP: " + str(self.ichigo.MP)]
                 )
+                self.aizenBox.updateText("Aizen Health: " + str(self.aizen.health))
             self.textBox.blit()
             if self.battleMode:
                 self.healthBox.blit()
+                self.aizenBox.blit()
             pygame.display.flip()
 
     def genItemButtons(self):
@@ -302,6 +324,7 @@ class GameManager:
 
     def start(self):
         self.dialogueMode = True
+        self.inMainMenu = False
         self.onScreenButtons = [self.quitButton]
         self.reset()
 
@@ -312,8 +335,9 @@ class GameManager:
         self.ichigo.health = 500
         self.ichigo.MP = 150
         # This is actually the most disgusting thing I've ever done
-        self.ichigo.inventory[util.cursedKeyGetter(self.ichigo.inventory, 0)] = 5
-
+        # self.ichigo.inventory[util.cursedKeyGetter(self.ichigo.inventory, 0)] = 5
+        # HAHA I MADE IT WORSE!
+        self.ichigo.inventory[[x for x in self.ichigo.inventory.keys()][0]] = 5
         self.aizen.health = 1000
         self.aizen.MP = 200
 
@@ -321,3 +345,4 @@ class GameManager:
         self.reset()
 
         self.onScreenButtons = [self.quitButton] + self.fightButtons
+        pygame.mixer.Sound.play(sounds.fight)
