@@ -48,6 +48,3 @@ class Character:
         self.update(dt)
         self.rect = self.rect.move(self.pos)
         self.pos = 0, 0
-
-    def attack(self):
-        return random.choice(self.attacks)

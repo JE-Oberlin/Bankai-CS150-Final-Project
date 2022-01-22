@@ -7,6 +7,7 @@ import EmptyCharacter
 import util
 import ScriptParser as sp
 import sounds
+import backgrounds
 
 # I do this because I am lazy, don't judge me.
 from button import Button
@@ -23,8 +24,6 @@ class GameManager:
     screen = pygame.display.set_mode(constants.SIZE)
 
     def __init__(self):
-        # pygame.init()
-        # self.screen = pygame.display.set_mode(constants.SIZE)
         self.gameTime = pygame.time.Clock()
         self.quitButton = Button(
             self.screen,
@@ -82,15 +81,9 @@ class GameManager:
         self.ichigoAttacked = False
         self.timeToMurder = False
         self.timer = 0
-        if platform == "darwin":
-            self.tVal1 = 1000
-            self.tVal2 = 2000
-        elif platform == "linux":
-            self.tVal1 = 300
-            self.tVal2 = 600
-        else: # Windows
-            self.tVal1 = 3000
-            self.tVal2 = 5000
+        self.blackground = backgrounds.Background(self.screen, "IMG_0646.jpg", (0, 0))
+        self.karakuraTown = backgrounds.Background(self.screen, "karakura.png")
+        self.activeBkgnd = self.blackground
         self.script = sp.ScriptParser("Script.txt")
 
     def loop(self):
@@ -178,6 +171,7 @@ class GameManager:
                     self.battleMode = False
                     self.onScreenButtons = self.mainMenuButtons
                     self.shownCharacter = self.mainMenuImg
+                    self.activeBkgnd = self.blackground
                     self.inMainMenu = True
                     self.updateText = "Click Start!"
                     self.script.position = -1
@@ -186,6 +180,7 @@ class GameManager:
             self.shownCharacter.move(self.gameTime.get_time())
 
             self.screen.fill(constants.B_COLOR)
+            self.activeBkgnd.blit()
             self.shownCharacter.blit()
             # Display no buttons when Aizen is attacking
             for b in self.onScreenButtons:
@@ -346,6 +341,7 @@ class GameManager:
         self.dialogueMode = True
         self.inMainMenu = False
         self.onScreenButtons = [self.quitButton]
+        self.activeBkgnd = self.karakuraTown
         self.reset()
 
     def quit(self):
