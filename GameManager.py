@@ -76,13 +76,19 @@ class GameManager:
             self.screen, bkgndPos=(60, 280), bkgndSize=(165, 60)
         )
         self.holoBox = textBox.TextBox(
-            self.screen, bkgndPos=(500, 325), bkgndSize=(165, 30)
+            self.screen, bkgndPos=(500, 325), bkgndSize=(130, 30)
         )
         self.skillButtons = self.genSkillButtons()
         self.itemButtons = self.genItemButtons()
         self.updateText = "Click Start!"
         self.onScreenButtons = self.mainMenuButtons
-        self.shownCharacter = [self.mainMenuImg]
+        self.ichigo.pos = 10, 200
+        self.ichigo.image = pygame.transform.scale(self.ichigo.image, (127, 100))
+        self.rukia.pos = 157, 200
+        self.rukia.image = pygame.transform.scale(self.rukia.image, (100, 100))
+        self.aizen.pos = 277, 200
+        self.aizen.image = pygame.transform.scale(self.aizen.image, (100, 100))
+        self.shownCharacter = [self.mainMenuImg, self.ichigo, self.aizen, self.rukia]
         self.playingDialogeMusic = False
         self.dialogueMode = False
         self.battleMode = False
@@ -196,7 +202,24 @@ class GameManager:
                     self.dialogueMode = False
                     self.battleMode = False
                     self.onScreenButtons = self.mainMenuButtons
-                    self.shownCharacter = [self.mainMenuImg]
+                    self.ichigo.pos = 10, 200
+                    self.ichigo.image = pygame.transform.scale(
+                        self.ichigo.image, (127, 100)
+                    )
+                    self.rukia.pos = 157, 200
+                    self.rukia.image = pygame.transform.scale(
+                        self.rukia.image, (100, 100)
+                    )
+                    self.aizen.pos = 277, 200
+                    self.aizen.image = pygame.transform.scale(
+                        self.aizen.image, (100, 100)
+                    )
+                    self.shownCharacter = [
+                        self.mainMenuImg,
+                        self.ichigo,
+                        self.aizen,
+                        self.rukia,
+                    ]
                     self.activeBkgnd = self.blackground
                     self.inMainMenu = True
                     self.updateText = "Click Start!"
@@ -204,11 +227,11 @@ class GameManager:
 
             self.screen.fill(constants.B_COLOR)
 
+            self.activeBkgnd.blit()
+
             for c in self.shownCharacter:
                 c.move(self.gameTime.get_time())
                 c.blit()
-
-            self.activeBkgnd.blit()
             # Display no buttons when Aizen is attacking
             for b in self.onScreenButtons:
                 b.blit()
@@ -390,6 +413,15 @@ class GameManager:
         self.inMainMenu = False
         self.onScreenButtons = [self.quitButton]
         self.activeBkgnd = self.karakuraTown
+        self.ichigo.pos = -10, -200
+        self.ichigo.image = pygame.image.load("Ichigo.jpg")
+        self.ichigo.image = pygame.transform.scale(self.ichigo.image, (350, 275))
+        self.rukia.pos = -157, -200
+        self.rukia.image = pygame.image.load("rukia.png")
+        self.rukia.image = pygame.transform.scale(self.rukia.image, (275, 275))
+        self.aizen.pos = -277, -200
+        self.aizen.image = pygame.image.load("aizen.png")
+        self.aizen.image = pygame.transform.scale(self.aizen.image, (275, 275))
         self.reset()
 
     def quit(self):

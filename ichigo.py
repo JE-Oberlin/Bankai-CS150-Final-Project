@@ -7,7 +7,6 @@ import pygame
 class Ichigo(Character):
     def __init__(self, screen):
         super().__init__(0, 0, screen, "Ichigo.jpg")
-        self.image = pygame.transform.scale(self.image, (350, 275))
         self.health = 1000
         self.MP = 200
         self.basicAttack = Attack("Attack", [45, 55], 95, 5)

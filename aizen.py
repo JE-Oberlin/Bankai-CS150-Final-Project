@@ -17,7 +17,6 @@ class Aizen(Character):
 
     def __init__(self, screen):
         super().__init__(0, 0, screen, "aizen.png")
-        self.image = pygame.transform.scale(self.image, (275, 275))
         self.health = 2500
         self.MP = 250
         self.attacks = [Aizen.BasicAttack(), Aizen.Shikai()]

@@ -20,9 +20,60 @@ i|I'm not seeing things!!
 o|It's okay, you can talk to us.
 r|Anyway, rembember to click the holofication button when you can.
 r|It triples your damage.
-n|Aizen appears!
+i|Alright, thanks Rukia.
+o|Goodluck Ichigo!
+show|i
+n|With most of the Arrancars defeated, the final enemy approaches.
+n|Ichigo harnesses the power of reishi and ascends to the roofs.
+i|AIZEN!!
+n|A few seconds pass.
+n|And then...
+a|Ahh, so you finally arrive.
+a|Kurosaki-san...
+i|Aizen, this is where you die!
+a|Now, now, let's not get too carried away here.
+a|You are at such a disadvantage I might laugh.
+i|Oh really?
+i|Maybe I should be the one laughing.
+show|a
+n|Aizen chuckles.
+a|Foolish as ever, Kurosaki-kun.
+i|I've gotten new techniques since we last met, Aizen.
+i|I've gotten harder, better, faster, and stronger.
+a|Oh wow all four.
+i|Yeah.
+i|So get ready.
+i|'Cause you're about to get schooled.
+a|We'll see...
 r|Ichigo! Remember your Holofication!
+i|Of course, Rukia!
+a|Well then, shall be begin, Kurosaki-kun.
 <BATTLE>
 show|i
-n|You won, very nice!
+n|You won!
+a|Ah, impossible.
+a|Such speed.
+a|Such power.
+i|What'd I tell you old man.
+i|I got better.
+r|Ichigo!!
+n|Rukia and Orehiime run over to Ichigo on the roof.
+o|Are you hurt??
+i|No I'm fine, I'm the protagonist.
+o|What?
+i|Nothing.
+r|Good job using your Holofication.
+r|Flawless execution.
+i|Thanks.
+a|You...
+i|Shut up.
+n|Ichigo walks over to Aizen and stabs him through the chest.
+a|ahhh....   .        .                 .
+i|Any more clean up needed?
+r|Not that I'm aware.
+r|But we should check in with my brother.
+i|Alright.
+b|And that my friends is how you make a very mediocre game in pygame.
+show|i
+n|And that's how I met your mother.
 <END>
