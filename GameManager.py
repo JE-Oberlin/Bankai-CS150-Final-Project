@@ -7,6 +7,7 @@ import EmptyCharacter
 import util
 import ScriptParser as sp
 import sounds
+import backgrounds
 
 # I do this because I am lazy, don't judge me.
 from button import Button
@@ -24,8 +25,6 @@ class GameManager:
     screen = pygame.display.set_mode(constants.SIZE)
 
     def __init__(self):
-        # pygame.init()
-        # self.screen = pygame.display.set_mode(constants.SIZE)
         self.gameTime = pygame.time.Clock()
         self.quitButton = Button(
             self.screen,
@@ -99,6 +98,9 @@ class GameManager:
             "o": self.orehime,
             "b": self.blair,
         }
+        self.blackground = backgrounds.Background(self.screen, "IMG_0646.jpg", (0, 0))
+        self.karakuraTown = backgrounds.Background(self.screen, "karakura.png")
+        self.activeBkgnd = self.blackground
         self.script = sp.ScriptParser("Script.txt")
 
     def loop(self):
@@ -195,6 +197,7 @@ class GameManager:
                     self.battleMode = False
                     self.onScreenButtons = self.mainMenuButtons
                     self.shownCharacter = [self.mainMenuImg]
+                    self.activeBkgnd = self.blackground
                     self.inMainMenu = True
                     self.updateText = "Click Start!"
                     self.script.position = -1
@@ -204,6 +207,8 @@ class GameManager:
             for c in self.shownCharacter:
                 c.move(self.gameTime.get_time())
                 c.blit()
+
+            self.activeBkgnd.blit()
             # Display no buttons when Aizen is attacking
             for b in self.onScreenButtons:
                 b.blit()
@@ -384,6 +389,7 @@ class GameManager:
         self.dialogueMode = True
         self.inMainMenu = False
         self.onScreenButtons = [self.quitButton]
+        self.activeBkgnd = self.karakuraTown
         self.reset()
 
     def quit(self):
