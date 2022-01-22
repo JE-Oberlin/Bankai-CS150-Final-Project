@@ -151,6 +151,7 @@ class GameManager:
                         self.timer = 0
 
                         self.updateText = "Please select what to do"
+                        self.shownCharacter = self.aizen
             elif self.dialogueMode:
                 if self.script.currentLine()[0] == "i":
                     self.shownCharacter = self.ichigo
@@ -307,6 +308,9 @@ class GameManager:
                 d = random.randint(*basic.dmgRng)
 
                 self.ichigo.health -= d
+                pygame.mixer.Sound.play(sounds.hitSound)
+                self.shownCharacter = self.ichigo
+                self.ichigo.bump()
 
                 self.updateText = (
                     "Aizen used " + basic.name + " and you took " + str(d) + " damage!!"
@@ -321,6 +325,9 @@ class GameManager:
                 d = random.randint(*sh.dmgRng)
 
                 self.ichigo.health -= d
+                pygame.mixer.Sound.play(sounds.hitSound)
+                self.shownCharacter = self.ichigo
+                self.ichigo.bump()
 
                 self.updateText = (
                     "Aizen used " + sh.name + " and you took " + str(d) + " damage!!"
