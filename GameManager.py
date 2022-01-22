@@ -12,11 +12,12 @@ import sounds
 from button import Button
 from ichigo import Ichigo
 from aizen import Aizen
+from rukia import Rukia
+from orehime import Orehime
+from blair import Blair
 from attack import Attack
-from sys import platform
 import item
 import menuImg
-
 
 
 class GameManager:
@@ -40,6 +41,9 @@ class GameManager:
         )
         self.ichigo = Ichigo(self.screen)
         self.aizen = Aizen(self.screen)
+        self.rukia = Rukia(self.screen)
+        self.orehime = Orehime(self.screen)
+        self.blair = Blair(self.screen)
         self.empty = EmptyCharacter.Empty(self.screen)
         self.mainMenuImg = menuImg.MenuImg(self.screen)
         self.mainMenuButtons = [
@@ -63,34 +67,38 @@ class GameManager:
             ),
             Button(self.screen, 300, 100, self.skills, "Skills"),
             Button(self.screen, 300, 150, self.items, "Items"),
+            Button(self.screen, 300, 200, self.holoify, "Holoify"),
         ]
         self.textBox = textBox.TextBox(self.screen)
         self.healthBox = textBox.TextBox(
-            self.screen, bkgndPos=(500, 250), bkgndSize=(120, 60)
+            self.screen, bkgndPos=(500, 280), bkgndSize=(120, 60)
         )
         self.aizenBox = textBox.TextBox(
             self.screen, bkgndPos=(60, 280), bkgndSize=(165, 60)
+        )
+        self.holoBox = textBox.TextBox(
+            self.screen, bkgndPos=(500, 325), bkgndSize=(165, 30)
         )
         self.skillButtons = self.genSkillButtons()
         self.itemButtons = self.genItemButtons()
         self.updateText = "Click Start!"
         self.onScreenButtons = self.mainMenuButtons
-        self.shownCharacter = self.mainMenuImg
+        self.shownCharacter = [self.mainMenuImg]
+        self.playingDialogeMusic = False
         self.dialogueMode = False
         self.battleMode = False
         self.playerTurn = True
         self.ichigoAttacked = False
+        self.holoifiedCounter = 0
         self.timeToMurder = False
         self.timer = 0
-        if platform == "darwin":
-            self.tVal1 = 1000
-            self.tVal2 = 2000
-        elif platform == "linux":
-            self.tVal1 = 300
-            self.tVal2 = 600
-        else: # Windows
-            self.tVal1 = 3000
-            self.tVal2 = 5000
+        self.charDict = {
+            "i": self.ichigo,
+            "a": self.aizen,
+            "r": self.rukia,
+            "o": self.orehime,
+            "b": self.blair,
+        }
         self.script = sp.ScriptParser("Script.txt")
 
     def loop(self):
@@ -129,6 +137,11 @@ class GameManager:
                 if self.aizen.health <= 0:
                     del self.onScreenButtons[1:]
                     pygame.mixer.Sound.stop(sounds.fight)
+                    if self.ichigo.holoified:
+                        self.ichigo.swapPic()
+                    self.shownCharacter = [self.ichigo]
+                    self.ichigo.pos = -400, 0
+                    self.ichigo.move(self.gameTime.get_time())
                     self.battleMode = False
                     self.dialogueMode = True
                     self.ichigoAttacked = False
@@ -151,42 +164,46 @@ class GameManager:
                         self.timer = 0
 
                         self.updateText = "Please select what to do"
-                        self.shownCharacter = self.aizen
             elif self.dialogueMode:
-                if self.script.currentLine()[0] == "i":
-                    self.shownCharacter = self.ichigo
-                elif self.script.currentLine()[0] == "a":
-                    self.shownCharacter = self.aizen
-                elif self.script.currentLine()[0] == "show":
-                    if self.script.currentLine()[1] == "i":
-                        self.shownCharacter = self.ichigo
-                    elif self.script.currentLine()[1] == "a":
-                        self.shownCharacter = self.aizen
+                if not self.playingDialogeMusic:
+                    pygame.mixer.Sound.play(sounds.talking)
+                    self.playingDialogeMusic = True
+                curr = self.script.currentLine()[0]
+
+                if curr in self.charDict.keys():
+                    self.shownCharacter = [self.charDict[curr]]
+                elif curr == "show":
+                    self.shownCharacter = [self.charDict[self.script.currentLine()[1]]]
 
                     self.script.next()
-                elif self.script.currentLine()[0] == "<BATTLE>":
+                elif curr == "<BATTLE>":
                     for b in self.fightButtons:
                         self.onScreenButtons.append(b)
                     self.battleMode = True
                     self.dialogueMode = False
                     self.updateText = "Please select what to do"
+                    pygame.mixer.Sound.stop(sounds.talking)
                     pygame.mixer.Sound.play(sounds.fight)
+                    self.playingDialogeMusic = False
+                    self.shownCharacter = [self.aizen, self.ichigo]
+                    self.ichigo.pos = 400, 0
+                    self.ichigo.move(self.gameTime.get_time())
                     self.script.next()
-                elif self.script.currentLine()[0] == "<END>":
-                    # print("Hello there")
+                elif curr == "<END>":
+                    pygame.mixer.Sound.stop(sounds.talking)
                     self.dialogueMode = False
                     self.battleMode = False
                     self.onScreenButtons = self.mainMenuButtons
-                    self.shownCharacter = self.mainMenuImg
+                    self.shownCharacter = [self.mainMenuImg]
                     self.inMainMenu = True
                     self.updateText = "Click Start!"
                     self.script.position = -1
 
-            # print(self.shownCharacter)
-            self.shownCharacter.move(self.gameTime.get_time())
-
             self.screen.fill(constants.B_COLOR)
-            self.shownCharacter.blit()
+
+            for c in self.shownCharacter:
+                c.move(self.gameTime.get_time())
+                c.blit()
             # Display no buttons when Aizen is attacking
             for b in self.onScreenButtons:
                 b.blit()
@@ -199,10 +216,14 @@ class GameManager:
                     ["Health: " + str(self.ichigo.health), "MP: " + str(self.ichigo.MP)]
                 )
                 self.aizenBox.updateText("Aizen Health: " + str(self.aizen.health))
+                self.holoBox.updateText(
+                    ["Holo Points: " + str(self.ichigo.holoPoints), ""]
+                )
             self.textBox.blit()
             if self.battleMode:
                 self.healthBox.blit()
                 self.aizenBox.blit()
+                self.holoBox.blit()
             self.gameTime.tick()
             # print(self.gameTime.get_fps())
             pygame.display.flip()
@@ -280,7 +301,18 @@ class GameManager:
             self.updateText = "Tried to use " + atk.name + ", but it missed!"
         else:
             d = random.randint(*atk.dmgRng)
-            self.aizen.health -= d
+            if not self.ichigo.holoified:
+                self.aizen.health -= d
+                self.ichigo.holoPoints += int((d / 8))
+            elif self.holoifiedCounter < 2:
+                self.aizen.health -= d * 3
+                d = d * 3
+                self.holoifiedCounter += 1
+
+                if self.holoifiedCounter >= 2:
+                    self.ichigo.holoified = False
+                    self.ichigo.swapPic()
+                    self.holoifiedCounter = 0
 
             self.aizen.bump()
             pygame.mixer.Sound.play(sounds.hitSound)
@@ -289,6 +321,14 @@ class GameManager:
 
         self.ichigoAttacked = True
         self.timeToMurder = True
+
+    def holoify(self):
+        if self.ichigo.holoPoints >= 50:
+            self.ichigo.holoified = True
+            self.ichigo.swapPic()
+            self.ichigo.holoPoints -= 50
+        else:
+            self.updateText = "You do not have enough holo points to enter holo mode."
 
     def damageIchigo(self):
         c = random.randint(0, 100)
@@ -309,7 +349,6 @@ class GameManager:
 
                 self.ichigo.health -= d
                 pygame.mixer.Sound.play(sounds.hitSound)
-                self.shownCharacter = self.ichigo
                 self.ichigo.bump()
 
                 self.updateText = (
@@ -326,7 +365,6 @@ class GameManager:
 
                 self.ichigo.health -= d
                 pygame.mixer.Sound.play(sounds.hitSound)
-                self.shownCharacter = self.ichigo
                 self.ichigo.bump()
 
                 self.updateText = (
@@ -334,7 +372,7 @@ class GameManager:
                 )
 
     def changeShownCharacter(self, char):
-        self.shownCharacter = char
+        self.shownCharacter = [char]
 
     def restoreButtons(self, buttons: list):
         del self.onScreenButtons[1:]
@@ -352,14 +390,14 @@ class GameManager:
         sys.exit(23)
 
     def reset(self):
-        self.ichigo.health = 500
-        self.ichigo.MP = 150
+        self.ichigo.health = 1000
+        self.ichigo.MP = 200
         # This is actually the most disgusting thing I've ever done
         # self.ichigo.inventory[util.cursedKeyGetter(self.ichigo.inventory, 0)] = 5
         # HAHA I MADE IT WORSE!
-        self.ichigo.inventory[[x for x in self.ichigo.inventory.keys()][0]] = 5
-        self.aizen.health = 1000
-        self.aizen.MP = 200
+        self.ichigo.inventory[[x for x in self.ichigo.inventory.keys()][0]] = 10
+        self.aizen.health = 2500
+        self.aizen.MP = 250
 
     def retryFight(self):
         self.reset()

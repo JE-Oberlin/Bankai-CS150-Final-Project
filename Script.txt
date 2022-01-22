@@ -3,9 +3,25 @@
 # a = Aizen
 # n = narrator
 
-i|It is I Ichigo Kurosaki
-a|Itsa me Aizen
-n|You kill shoot
+r|Ichigo, we have to stop Aizen from destroying Karakura town!
+o|But Rukia, how do we do that?
+i|Yeah, if the Thirteen Guard Captains can't do it, how can I?
+r|Use your Holofication.
+r|Use your mouse to click Holofication when your holo points reach 50.
+i|Rukia what do you mean use the mouse?
+i|We aren't in a computer.
+b|Or are you??
+i|WHOAH WHAT WHO WAS THAT????
+r|Who was who?
+i|YOU DIDN'T SEE HIM?
+o|Ichigo, are you okay?
+r|Ichigo, I think you're seeing things.
+i|I'm not seeing things!!
+o|It's okay, you can talk to us.
+r|Anyway, rembember to click the holofication button when you can.
+r|It triples your damage.
+n|Aizen appears!
+r|Ichigo! Remember your Holofication!
 <BATTLE>
 show|i
 n|You won, very nice!

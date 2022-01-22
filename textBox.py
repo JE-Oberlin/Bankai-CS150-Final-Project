@@ -21,6 +21,14 @@ class TextBox:
             bkgndPos[0], bkgndPos[1], bkgndSize[0], bkgndSize[1]
         )
         self.bkgndColor = bkgndColor
+        self.charDict = {
+            "i": "Ichigo",
+            "a": "Aizen",
+            "o": "Orehime",
+            "r": "Rukia",
+            "n": "",
+            "b": "Blair Rossetti",
+        }
 
     def blit(self):
         pygame.draw.rect(self.screen, self.bkgndColor, self.bkgndRect)
@@ -38,12 +46,8 @@ class TextBox:
             self.characterText = self.font.render("", True, self.color)
         elif len(text) > 1:
             self.dialogueText = self.font.render(text[1], True, self.color)
-            if text[0] == "i":
-                self.character = "Ichigo"
-            elif text[0] == "a":
-                self.character = "Aizen"
-            elif text[0] == "n":
-                self.character = ""
+            if text[0] in self.charDict.keys():
+                self.character = self.charDict[text[0]]
             else:
                 self.character = text[0]
 

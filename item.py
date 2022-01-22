@@ -17,7 +17,7 @@ class HealthItem(Item):
 
     def use(self, stuff: list):
         # print("Hello there")
-        if stuff[0].health >= 500:
+        if stuff[0].health >= 1000:
             stuff[1].updateText = "You are at full health, no healing for you!"
         elif stuff[0].inventory[self] > 0:
             stuff[0].health += 75
