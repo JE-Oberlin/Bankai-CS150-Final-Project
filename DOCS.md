@@ -5,7 +5,8 @@ This file will contain your project Documentation. Fill out the relevant section
 
 ## Summary
 #### Briefly describe your program and what it does.
-Vidya Game
+A very bare bones turn based game with some visual novel elements. 
+Takes the characters from Bleach and puts you in control. 
 
 ## Example Usage
 #### Provide examples of how the user should run your program.
@@ -13,11 +14,14 @@ Click the replit run button OR type "python3 main.py" in the shell
 
 ## Input
 #### Describe any input(s) required from the user.
-Clicking the buttons that are displayed onscreen
+Clicking the buttons that are displayed onscreen.
 
 ## Output
 #### Describe any output(s) produced by your program.
-The text box at the bottom of the pygame window will display dialogue of the characters and feedback to the user during the battle phase.
+The text box at the bottom of the pygame window will display dialogue of the characters and feedback to the 
+user during the battle phase.
+Images change based on user input.
+Sounds play as the user advances through the script.
 
 ## Known Issues
 #### Describe any known bugs, including workarounds to keep your program running.
