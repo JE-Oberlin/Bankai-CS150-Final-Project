@@ -21,4 +21,13 @@ The text box at the bottom of the pygame window will display dialogue of the cha
 
 ## Known Issues
 #### Describe any known bugs, including workarounds to keep your program running.
+Sound does not work in replit so if you care enough you can download the files and run it in vscode or just in cmd or terminal. Make sure to run main.py
+If you don't have pygame installed you can get it by running
 
+```python -m pip install pygame```
+
+or
+
+```python3 -m pip install pygame```
+
+depending on how you have python set up. For some reason my python launches a more updated version than the python3 command which I don't understand.
