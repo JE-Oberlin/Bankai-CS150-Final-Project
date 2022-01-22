@@ -1,24 +1,24 @@
-import pygame
 import random
 import sys
-import constants
-import textBox
-import EmptyCharacter
-import util
-import ScriptParser as sp
-import sounds
-import backgrounds
 
+import pygame
+
+import EmptyCharacter
+import ScriptParser as sp
+import backgrounds
+import constants
+import item
+import menuImg
+import sounds
+import textBox
+from aizen import Aizen
+from attack import Attack
+from blair import Blair
 # I do this because I am lazy, don't judge me.
 from button import Button
 from ichigo import Ichigo
-from aizen import Aizen
-from rukia import Rukia
 from orehime import Orehime
-from blair import Blair
-from attack import Attack
-import item
-import menuImg
+from rukia import Rukia
 
 
 class GameManager:
@@ -370,7 +370,7 @@ class GameManager:
             self.aizen.MP -= basic.cost
             if c > basic.hitChance:
                 self.updateText = (
-                    "Aizen tried to use " + basic.name + ", but it missed!"
+                        "Aizen tried to use " + basic.name + ", but it missed!"
                 )
             else:
                 d = random.randint(*basic.dmgRng)
@@ -380,7 +380,7 @@ class GameManager:
                 self.ichigo.bump()
 
                 self.updateText = (
-                    "Aizen used " + basic.name + " and you took " + str(d) + " damage!!"
+                        "Aizen used " + basic.name + " and you took " + str(d) + " damage!!"
                 )
         else:
             # Use Shikai
@@ -396,7 +396,7 @@ class GameManager:
                 self.ichigo.bump()
 
                 self.updateText = (
-                    "Aizen used " + sh.name + " and you took " + str(d) + " damage!!"
+                        "Aizen used " + sh.name + " and you took " + str(d) + " damage!!"
                 )
 
     def changeShownCharacter(self, char):
